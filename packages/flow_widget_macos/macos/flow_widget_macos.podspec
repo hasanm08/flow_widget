@@ -10,7 +10,7 @@ Provides WidgetKit timeline reloads and App Group shared storage for macOS
 desktop widgets managed by flow_widget.
                        DESC
   s.homepage         = 'https://github.com/hasanm08/flow_widget'
-  s.license          = { :file => '../../../LICENSE' }
+  s.license          = { :file => '../LICENSE' }
   s.author           = { 'flow_widget' => 'dev@flowwidget.dev' }
   s.source           = { :path => '.' }
   s.source_files     = 'Classes/**/*'
