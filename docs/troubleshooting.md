@@ -1,5 +1,22 @@
 # Troubleshooting
 
+## Pod install fails on iOS (deployment target)
+
+If you see:
+
+> The plugin "flow_widget_ios" requires a higher minimum iOS deployment version
+
+Set your app to **iOS 14.0+**:
+
+- `ios/Podfile`: `platform :ios, '14.0'`
+- Xcode Runner target → Minimum Deployments → **14.0**
+
+Then run:
+
+```bash
+cd ios && pod install --repo-update
+```
+
 ## Pod install fails on macOS (deployment target)
 
 If you see:
@@ -30,7 +47,7 @@ Call `initialize` before any other API.
 
 ## Live Activities fail
 
-Requires iOS 16.1+, ActivityKit capability, and matching attributes in the extension. On other platforms expect `unsupported`.
+Requires iOS 16.2+, ActivityKit capability, and matching attributes in the extension. On other platforms expect `unsupported`.
 
 ## Images missing in widgets
 

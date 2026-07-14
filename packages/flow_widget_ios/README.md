@@ -2,13 +2,30 @@
 
 iOS federated implementation for [flow_widget](https://github.com/hasanm08/flow_widget).
 
+## Requirements
+
+- **iOS 14.0 or later** — WidgetKit requires iOS 14+.
+- **Live Activities / Dynamic Island** require **iOS 16.2+**.
+- CocoaPods and **Swift Package Manager** are both supported.
+- Set your app's deployment target to at least **14.0**:
+
+```ruby
+# ios/Podfile
+platform :ios, '14.0'
+```
+
+In Xcode: Runner target → General → Minimum Deployments → iOS **14.0**.
+
+See [Flutter iOS deployment](https://docs.flutter.dev/deployment/ios#review-xcode-project-settings).
+
 ## Features
 
 - App Group `UserDefaults` storage with typed wire codec
 - WidgetKit timeline reload via `WidgetCenter`
 - Image persistence in the shared app group container
-- Live Activities via ActivityKit (iOS 16.1+) with generic attributes
+- Live Activities via ActivityKit (iOS 16.2+) with generic attributes
 - Dynamic Island support when available
+- Swift Package Manager + CocoaPods
 
 ## Setup
 

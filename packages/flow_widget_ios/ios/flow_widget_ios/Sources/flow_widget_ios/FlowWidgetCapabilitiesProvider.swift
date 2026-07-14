@@ -27,14 +27,14 @@ enum FlowWidgetCapabilitiesProvider {
     }
 
     private static var liveActivitiesSupported: Bool {
-        if #available(iOS 16.1, *) {
+        if #available(iOS 16.2, *) {
             return true
         }
         return false
     }
 
     private static var dynamicIslandSupported: Bool {
-        if #available(iOS 16.1, *) {
+        if #available(iOS 16.2, *) {
             return true
         }
         return false

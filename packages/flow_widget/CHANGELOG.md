@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.2
+
+- Depend on `flow_widget_ios` ^1.0.2 and `flow_widget_macos` ^1.0.2
+  (Swift Package Manager + Live Activity iOS 16.2 fixes).
+
+## 1.0.1
+
+- Depend on `flow_widget_ios` ^1.0.1 and `flow_widget_macos` ^1.0.1.
+- Document iOS 14.0 / macOS 11.0 minimum deployment targets.
+
 ## 1.0.0
 
 - Initial stable release.

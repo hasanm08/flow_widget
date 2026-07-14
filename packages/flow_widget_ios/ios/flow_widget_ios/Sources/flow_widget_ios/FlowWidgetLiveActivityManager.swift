@@ -4,7 +4,9 @@ import Foundation
 import ActivityKit
 #endif
 
-@available(iOS 16.1, *)
+/// Activity attributes shared with widget extensions.
+/// Content APIs (`ActivityContent`, `request(attributes:content:)`) require iOS 16.2+.
+@available(iOS 16.2, *)
 struct FlowWidgetActivityAttributes: ActivityAttributes {
     struct ContentState: Codable, Hashable {
         var data: [String: String]
@@ -26,7 +28,7 @@ final class FlowWidgetLiveActivityManager {
     }
 
     func start(config: [String: Any]) throws -> String {
-        guard #available(iOS 16.1, *) else {
+        guard #available(iOS 16.2, *) else {
             throw FlowWidgetLiveActivityError.unsupported
         }
 
@@ -40,7 +42,9 @@ final class FlowWidgetLiveActivityManager {
 
         let rawData = config["data"] as? [String: Any] ?? [:]
         let contentStrings = try FlowWidgetValueCodec.contentStateStrings(from: rawData)
-        let staleDate = (config["staleDate"] as? NSNumber).map { Date(timeIntervalSince1970: $0.doubleValue / 1000.0) }
+        let staleDate = (config["staleDate"] as? NSNumber).map {
+            Date(timeIntervalSince1970: $0.doubleValue / 1000.0)
+        }
 
         let attributes = FlowWidgetActivityAttributes(attributesType: attributesType)
         let content = ActivityContent(
@@ -68,7 +72,7 @@ final class FlowWidgetLiveActivityManager {
     }
 
     func update(activityId: String, data: [String: Any]) throws {
-        guard #available(iOS 16.1, *) else {
+        guard #available(iOS 16.2, *) else {
             throw FlowWidgetLiveActivityError.unsupported
         }
 
@@ -86,12 +90,14 @@ final class FlowWidgetLiveActivityManager {
             await activity.update(content)
         }
 
-        if var record = storage.liveActivityRecord(activityId: activityId) {
+        if let record = storage.liveActivityRecord(activityId: activityId) {
             try storage.storeLiveActivityRecord(
                 activityId: activityId,
-                attributesType: record["attributesType"] as? String ?? "FlowWidgetActivityAttributes",
+                attributesType: record["attributesType"] as? String
+                    ?? "FlowWidgetActivityAttributes",
                 data: contentStrings,
-                startedAt: record["startedAt"] as? Int ?? Int(Date().timeIntervalSince1970 * 1000),
+                startedAt: record["startedAt"] as? Int
+                    ?? Int(Date().timeIntervalSince1970 * 1000),
                 staleDate: record["staleDate"] as? Int
             )
         }
@@ -100,7 +106,7 @@ final class FlowWidgetLiveActivityManager {
     }
 
     func end(activityId: String, finalData: [String: Any]?, dismissalDate: Int?) throws {
-        guard #available(iOS 16.1, *) else {
+        guard #available(iOS 16.2, *) else {
             throw FlowWidgetLiveActivityError.unsupported
         }
 
@@ -131,14 +137,16 @@ final class FlowWidgetLiveActivityManager {
     }
 
     func activeActivities() -> [[String: Any]] {
-        if #available(iOS 16.1, *) {
+        if #available(iOS 16.2, *) {
             let live = Activity<FlowWidgetActivityAttributes>.activities.map { activity -> [String: Any] in
                 let record = storage.liveActivityRecord(activityId: activity.id)
                 var payload: [String: Any] = [
                     "activityId": activity.id,
-                    "attributesType": record?["attributesType"] as? String ?? "FlowWidgetActivityAttributes",
+                    "attributesType": record?["attributesType"] as? String
+                        ?? "FlowWidgetActivityAttributes",
                     "data": FlowWidgetValueCodec.wireMap(from: activity.content.state.data),
-                    "startedAt": record?["startedAt"] as? Int ?? Int(Date().timeIntervalSince1970 * 1000),
+                    "startedAt": record?["startedAt"] as? Int
+                        ?? Int(Date().timeIntervalSince1970 * 1000),
                 ]
                 if let staleDate = record?["staleDate"] as? Int {
                     payload["staleDate"] = staleDate
@@ -165,9 +173,9 @@ final class FlowWidgetLiveActivityManager {
         }
     }
 
-    @available(iOS 16.1, *)
+    @available(iOS 16.2, *)
     private func findActivity(id: String) -> Activity<FlowWidgetActivityAttributes>? {
-        return Activity<FlowWidgetActivityAttributes>.activities.first { $0.id == id }
+        Activity<FlowWidgetActivityAttributes>.activities.first { $0.id == id }
     }
 
     private func emit(phase: String, activityId: String) {
@@ -189,7 +197,7 @@ enum FlowWidgetLiveActivityError: Error, LocalizedError {
     var errorDescription: String? {
         switch self {
         case .unsupported:
-            return "Live Activities require iOS 16.1 or later"
+            return "Live Activities require iOS 16.2 or later"
         case .disabled:
             return "Live Activities are disabled on this device"
         case .badArgs(let message):

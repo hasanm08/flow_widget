@@ -2,7 +2,7 @@ name: flow_widget_macos
 description: >
   macOS implementation of the flow_widget federated plugin.
   Provides WidgetKit timeline reloads and App Group shared storage.
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/hasanm08/flow_widget
 repository: https://github.com/hasanm08/flow_widget
 issue_tracker: https://github.com/hasanm08/flow_widget/issues

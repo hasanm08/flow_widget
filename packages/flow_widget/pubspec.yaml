@@ -4,7 +4,7 @@ description: >
   Live Activities, Wear OS Tiles, and watchOS Complications through a single
   Dart API. Federated architecture with first-class Android, iOS, macOS,
   Windows, and Linux support.
-version: 1.0.0
+version: 1.0.2
 homepage: https://github.com/hasanm08/flow_widget
 repository: https://github.com/hasanm08/flow_widget
 issue_tracker: https://github.com/hasanm08/flow_widget/issues
@@ -25,8 +25,8 @@ dependencies:
     sdk: flutter
   flow_widget_platform_interface: ^1.0.0
   flow_widget_android: ^1.0.0
-  flow_widget_ios: ^1.0.0
-  flow_widget_macos: ^1.0.1
+  flow_widget_ios: ^1.0.2
+  flow_widget_macos: ^1.0.2
   flow_widget_windows: ^1.0.0
   flow_widget_linux: ^1.0.0
   flow_widget_annotation: ^1.0.0

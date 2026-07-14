@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flow_widget_ios'
-  s.version          = '1.0.0'
+  s.version          = '1.0.2'
   s.summary          = 'iOS implementation of the flow_widget Flutter plugin.'
   s.description      = <<-DESC
 Federated iOS implementation providing shared storage, WidgetKit updates,
@@ -13,7 +13,7 @@ and ActivityKit Live Activities for flow_widget.
   s.license          = { :type => 'MIT' }
   s.author           = { 'Flow Widget' => 'support@flow-widget.dev' }
   s.source           = { :path => '.' }
-  s.source_files     = 'Classes/**/*'
+  s.source_files     = 'flow_widget_ios/Sources/flow_widget_ios/**/*.swift'
   s.dependency 'Flutter'
   s.platform         = :ios, '14.0'
   s.swift_version    = '5.0'
@@ -21,6 +21,10 @@ and ActivityKit Live Activities for flow_widget.
     'DEFINES_MODULE' => 'YES',
     'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386'
   }
-  s.resource_bundles = { 'flow_widget_ios_privacy' => ['PrivacyInfo.xcprivacy'] }
+  s.resource_bundles = {
+    'flow_widget_ios_privacy' => [
+      'flow_widget_ios/Sources/flow_widget_ios/Resources/PrivacyInfo.xcprivacy'
+    ]
+  }
   s.weak_frameworks = 'ActivityKit', 'WidgetKit'
 end
