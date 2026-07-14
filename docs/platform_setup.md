@@ -22,7 +22,8 @@ Deployment target: **iOS 14+** (Live Activities require **16.1+**).
 
 ## macOS
 
-Same App Group + WidgetKit pattern as iOS. Live Activities are not available.
+1. Set **minimum deployment target to macOS 11.0** in `macos/Podfile` and the Runner Xcode project.
+2. Enable an **App Group** for the app and widget extension.
 
 ## Windows / Linux
 

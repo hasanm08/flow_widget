@@ -1,5 +1,22 @@
 # Troubleshooting
 
+## Pod install fails on macOS (deployment target)
+
+If you see:
+
+> The plugin "flow_widget_macos" requires a higher minimum macOS deployment version
+
+Set your app to **macOS 11.0+**:
+
+- `macos/Podfile`: `platform :osx, '11.0'`
+- Xcode Runner target → Minimum Deployments → **11.0**
+
+Then run:
+
+```bash
+cd macos && pod install --repo-update
+```
+
 ## Widget does not update
 
 - Confirm `FlowWidget.initialize` succeeded

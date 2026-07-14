@@ -2,6 +2,20 @@
 
 macOS federated implementation of [flow_widget](https://github.com/hasanm08/flow_widget).
 
+## Requirements
+
+- **macOS 11.0 (Big Sur) or later** — WidgetKit desktop widgets require macOS 11+.
+- Set your app's deployment target to at least **11.0**:
+
+```ruby
+# macos/Podfile
+platform :osx, '11.0'
+```
+
+In Xcode: Runner target → General → Minimum Deployments → macOS **11.0**.
+
+See [Flutter macOS deployment](https://docs.flutter.dev/deployment/macos#update-the-minimum-target-platform-version).
+
 ## Capabilities
 
 | Feature | Supported |

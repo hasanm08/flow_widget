@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flow_widget_macos'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = 'macOS implementation of the flow_widget plugin.'
   s.description      = <<-DESC
 Provides WidgetKit timeline reloads and App Group shared storage for macOS
