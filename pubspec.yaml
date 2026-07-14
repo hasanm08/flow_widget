@@ -1,0 +1,8 @@
+name: flow_widget_workspace
+description: Federated Flutter plugin monorepo for cross-platform home widgets.
+publish_to: none
+
+environment:
+  sdk: ^3.12.2
+# Packages under packages/ are independent and publishable to pub.dev.
+# Use pubspec_overrides.yaml in each package for local path linking.

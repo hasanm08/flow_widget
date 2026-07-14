@@ -1,0 +1,25 @@
+name: flow_widget_generator
+description: Code generator for @FlowWidgetModel annotated classes.
+version: 1.0.0
+homepage: https://github.com/hasanm08/flow_widget
+repository: https://github.com/hasanm08/flow_widget
+issue_tracker: https://github.com/hasanm08/flow_widget/issues
+topics:
+  - widget
+  - home-widget
+  - code-generation
+
+environment:
+  sdk: ^3.12.2
+
+dependencies:
+  analyzer: ^8.0.0
+  build: ^4.0.0
+  source_gen: ^4.0.0
+  flow_widget_annotation: ^1.0.0
+  flow_widget_platform_interface: ^1.0.0
+
+dev_dependencies:
+  build_runner: ^2.4.13
+  lints: ^6.0.0
+  test: ^1.25.0

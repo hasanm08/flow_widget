@@ -1,0 +1,33 @@
+name: flow_widget_linux
+description: >
+  Linux implementation of the flow_widget federated plugin.
+  Provides local JSON storage; desktop widgets are DE-specific.
+version: 1.0.0
+homepage: https://github.com/hasanm08/flow_widget
+repository: https://github.com/hasanm08/flow_widget
+issue_tracker: https://github.com/hasanm08/flow_widget/issues
+topics:
+  - widget
+  - home-widget
+  - linux
+
+environment:
+  sdk: ^3.12.2
+  flutter: ">=3.38.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flow_widget_platform_interface: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  plugin:
+    implements: flow_widget
+    platforms:
+      linux:
+        pluginClass: FlowWidgetPlugin

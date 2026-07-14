@@ -1,0 +1,14 @@
+targets:
+  $default:
+    builders:
+      flow_widget_generator|flow_widget:
+        enabled: true
+
+builders:
+  flow_widget:
+    import: "package:flow_widget_generator/builder.dart"
+    builder_factories: ["flowWidgetBuilder"]
+    build_extensions: {".dart": [".flow_widget.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]

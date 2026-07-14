@@ -1,0 +1,29 @@
+name: flow_widget_watchos
+description: >
+  watchOS Complications bridge for flow_widget. Provides Dart API and Swift
+  helpers compiled into Watch extensions via flow_widget_cli.
+version: 1.0.0
+homepage: https://github.com/hasanm08/flow_widget
+repository: https://github.com/hasanm08/flow_widget
+issue_tracker: https://github.com/hasanm08/flow_widget/issues
+topics:
+  - widget
+  - watchos
+  - complications
+
+environment:
+  sdk: ^3.12.2
+  flutter: ">=3.38.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flow_widget_platform_interface: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+# Pure Dart library with watchos/ Swift sources for CLI-generated Watch targets.
+# watchOS does not host a Flutter engine; native code runs in the Watch extension.

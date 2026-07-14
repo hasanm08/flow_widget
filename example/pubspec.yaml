@@ -1,0 +1,29 @@
+name: flow_widget_example
+description: Demonstrates flow_widget — weather, habits, calendar, fitness, music, finance, news, photos, countdown, checklist, and Live Activities.
+publish_to: none
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.12.2
+  flutter: ">=3.38.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  flow_widget:
+    path: ../packages/flow_widget
+  intl: ^0.20.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  flow_widget_platform_interface:
+    path: ../packages/flow_widget_platform_interface
+  plugin_platform_interface: ^2.1.8
+
+flutter:
+  uses-material-design: true

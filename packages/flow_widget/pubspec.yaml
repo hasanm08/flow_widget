@@ -1,0 +1,52 @@
+name: flow_widget
+description: >
+  Production-ready Flutter plugin for creating and managing home-screen widgets,
+  Live Activities, Wear OS Tiles, and watchOS Complications through a single
+  Dart API. Federated architecture with first-class Android, iOS, macOS,
+  Windows, and Linux support.
+version: 1.0.0
+homepage: https://github.com/hasanm08/flow_widget
+repository: https://github.com/hasanm08/flow_widget
+issue_tracker: https://github.com/hasanm08/flow_widget/issues
+documentation: https://github.com/hasanm08/flow_widget/tree/main/docs
+topics:
+  - widget
+  - home-widget
+  - widgetkit
+  - glance
+  - live-activities
+
+environment:
+  sdk: ^3.12.2
+  flutter: ">=3.38.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flow_widget_platform_interface: ^1.0.0
+  flow_widget_android: ^1.0.0
+  flow_widget_ios: ^1.0.0
+  flow_widget_macos: ^1.0.0
+  flow_widget_windows: ^1.0.0
+  flow_widget_linux: ^1.0.0
+  flow_widget_annotation: ^1.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+  plugin_platform_interface: ^2.1.8
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        default_package: flow_widget_android
+      ios:
+        default_package: flow_widget_ios
+      macos:
+        default_package: flow_widget_macos
+      windows:
+        default_package: flow_widget_windows
+      linux:
+        default_package: flow_widget_linux

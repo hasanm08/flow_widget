@@ -1,0 +1,20 @@
+name: flow_widget_annotation
+description: >
+  Annotations for flow_widget code generation. Pair with
+  package:flow_widget_generator and build_runner.
+version: 1.0.0
+homepage: https://github.com/hasanm08/flow_widget
+repository: https://github.com/hasanm08/flow_widget
+issue_tracker: https://github.com/hasanm08/flow_widget/issues
+topics:
+  - widget
+  - home-widget
+  - code-generation
+  - annotations
+
+environment:
+  sdk: ^3.12.2
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0

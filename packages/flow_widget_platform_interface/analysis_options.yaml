@@ -1,0 +1,13 @@
+include: ../../analysis_options.yaml
+
+analyzer:
+  errors:
+    # Channel argument maps intentionally use `if (x != null)` for clarity.
+    use_null_aware_elements: ignore
+    # Dartdoc cross-refs to sibling packages / app APIs.
+    comment_references: ignore
+    avoid_redundant_argument_values: ignore
+    prefer_final_locals: ignore
+    unnecessary_this: ignore
+    directives_ordering: ignore
+    prefer_const_constructors: ignore
