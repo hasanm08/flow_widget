@@ -1,27 +1,18 @@
 group = "dev.flowwidget.android"
-version = "1.0.0"
+version = "1.0.1"
 
-buildscript {
-    ext.kotlin_version = "2.1.0"
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:8.7.3")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version")
-    }
+plugins {
+    id("com.android.library")
 }
 
-allprojects {
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
+val agpMajor =
+    com.android.Version.ANDROID_GRADLE_PLUGIN_VERSION.substringBefore('.').toInt()
+val builtInKotlinDisabled =
+    project.findProperty("android.builtInKotlin")?.toString() == "false"
 
-apply plugin: "com.android.library"
-apply plugin: "kotlin-android"
+if (agpMajor < 9 || builtInKotlinDisabled) {
+    apply(plugin = "org.jetbrains.kotlin.android")
+}
 
 android {
     namespace = "dev.flowwidget.android"
@@ -32,27 +23,29 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
 
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17.toString()
-    }
-
     defaultConfig {
         minSdk = 24
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     sourceSets {
-        main.java.srcDirs += "src/main/kotlin"
-        test.java.srcDirs += "src/test/kotlin"
+        getByName("main").java.srcDirs("src/main/kotlin")
+        getByName("test").java.srcDirs("src/test/kotlin")
     }
 
     testOptions {
-        unitTests.includeAndroidResources = true
+        unitTests.isIncludeAndroidResources = true
+    }
+}
+
+project.extensions.configure<org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension> {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
     }
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("androidx.glance:glance-appwidget:1.1.1")
     implementation("androidx.glance:glance-material3:1.1.1")
     implementation("androidx.work:work-runtime-ktx:2.10.0")

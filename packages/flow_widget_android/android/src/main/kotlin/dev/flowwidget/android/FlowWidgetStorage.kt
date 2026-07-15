@@ -154,7 +154,7 @@ class FlowWidgetStorage(
         val array = JSONArray(json)
         return buildList {
             for (index in 0 until array.length()) {
-                put(jsonObjectToMap(array.getJSONObject(index)))
+                add(jsonObjectToMap(array.getJSONObject(index)))
             }
         }
     }

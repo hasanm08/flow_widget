@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+- Depend on `flow_widget_android` ^1.0.1 (Gradle 9 / AGP 9 Android build support).
+
 ## 1.0.2
 
 - Depend on `flow_widget_ios` ^1.0.2 and `flow_widget_macos` ^1.0.2
