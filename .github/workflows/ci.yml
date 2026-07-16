@@ -1,3 +1,27 @@
+# CI on PRs/main; publish to pub.dev on version tags (e.g. v1.0.4).
+#
+# pub.dev auth (prefer one):
+# 1. Repository secret PUB_CREDENTIALS = contents of ~/.config/dart/pub-credentials.json
+# 2. Or GitHub OIDC via flutter-actions/setup-pubdev-credentials (requires pub.dev
+#    publisher linked to this GitHub repo and id-token: write).
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+    tags:
+      # Must match the tag pattern configured on pub.dev (e.g. v{{version}}).
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ci:
       - name: Publish packages in dependency order
         run: |
           set -euo pipefail
