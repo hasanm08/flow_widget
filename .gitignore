@@ -30,7 +30,6 @@ migrate_working_dir/
 .pub/
 build/
 coverage/
-**/pubspec_overrides.yaml
 .melos_tool/
 melos_flow_widget.iml
 

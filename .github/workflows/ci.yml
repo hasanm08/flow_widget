@@ -94,9 +94,6 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Install dependencies
-        run: dart pub get
-
       - name: Authenticate with pub.dev (upload credentials secret)
         env:
           PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}

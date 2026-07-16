@@ -1,0 +1,15 @@
+dependency_overrides:
+  flow_widget_platform_interface:
+    path: ../flow_widget_platform_interface
+  flow_widget_android:
+    path: ../flow_widget_android
+  flow_widget_ios:
+    path: ../flow_widget_ios
+  flow_widget_macos:
+    path: ../flow_widget_macos
+  flow_widget_windows:
+    path: ../flow_widget_windows
+  flow_widget_linux:
+    path: ../flow_widget_linux
+  flow_widget_annotation:
+    path: ../flow_widget_annotation

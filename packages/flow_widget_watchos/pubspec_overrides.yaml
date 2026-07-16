@@ -1,0 +1,3 @@
+dependency_overrides:
+  flow_widget_platform_interface:
+    path: ../flow_widget_platform_interface

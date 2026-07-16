@@ -1,0 +1,5 @@
+dependency_overrides:
+  flow_widget_annotation:
+    path: ../flow_widget_annotation
+  flow_widget_platform_interface:
+    path: ../flow_widget_platform_interface
