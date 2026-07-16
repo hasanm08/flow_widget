@@ -22,10 +22,98 @@ concurrency:
 
 jobs:
   ci:
+    name: Analyze and test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install dependencies
+        run: |
+          for pkg in packages/* example; do
+            if [ -f "$pkg/pubspec.yaml" ]; then
+              echo "::group::pub get $pkg"
+              (cd "$pkg" && flutter pub get)
+              echo "::endgroup::"
+            fi
+          done
+
+      - name: Check formatting
+        run: dart format .
+
+      - name: Analyze
+        run: |
+          for pkg in packages/* example; do
+            if [ -f "$pkg/pubspec.yaml" ]; then
+              echo "::group::analyze $pkg"
+              (cd "$pkg" && dart analyze --fatal-infos)
+              echo "::endgroup::"
+            fi
+          done
+
+      - name: Test
+        run: |
+          for pkg in packages/flow_widget_platform_interface packages/flow_widget packages/flow_widget_cli packages/flow_widget_generator packages/flow_widget_annotation; do
+            if [ -d "$pkg/test" ]; then
+              echo "::group::test $pkg"
+              if grep -q 'sdk: flutter' "$pkg/pubspec.yaml"; then
+                (cd "$pkg" && flutter test)
+              else
+                (cd "$pkg" && dart test)
+              fi
+              echo "::endgroup::"
+            fi
+          done
+
+      - name: Example flutter test
+        working-directory: example
+        run: flutter test
+
+  # Runs only on version tag pushes (e.g. v1.0.4), not on main/PR pushes.
+  publish:
+    name: Publish to pub.dev
+    needs: ci
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for GitHub OIDC with pub.dev
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Authenticate with pub.dev (upload credentials secret)
+        env:
+          PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
+        run: |
+          if [ -n "${PUB_CREDENTIALS:-}" ]; then
+            mkdir -p "$HOME/.config/dart"
+            printf '%s' "$PUB_CREDENTIALS" > "$HOME/.config/dart/pub-credentials.json"
+            echo "USE_PUB_SECRET=1" >> "$GITHUB_ENV"
+            echo "Authenticated with PUB_CREDENTIALS secret."
+          else
+            echo "USE_PUB_SECRET=0" >> "$GITHUB_ENV"
+          fi
+
+      - name: Authenticate with pub.dev (GitHub OIDC)
+        if: env.USE_PUB_SECRET == '0'
+        uses: flutter-actions/setup-pubdev-credentials@v1
+
       - name: Publish packages in dependency order
         run: |
           set -euo pipefail
-
           publish() {
             local pkg="$1"
             echo "::group::Publish $pkg"
