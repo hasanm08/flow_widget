@@ -1,27 +1,44 @@
+# CI on PRs/main; publish to pub.dev on version tags (e.g. v1.0.4).
+#
+# pub.dev auth (prefer one):
+# 1. Repository secret PUB_CREDENTIALS = contents of ~/.config/dart/pub-credentials.json
+# 2. Or GitHub OIDC via flutter-actions/setup-pubdev-credentials (requires pub.dev
+#    publisher linked to this GitHub repo and id-token: write).
+
 name: CI
 
 on:
-  push:
-    branches: [main, master]
   pull_request:
     branches: [main, master]
+  push:
+    branches: [main, master]
+    tags:
+      # Must match the tag pattern configured on pub.dev (e.g. v{{version}}).
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  analyze-and-test:
+  ci:
+    name: Analyze and test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5
 
-      - uses: subosito/flutter-action@v2
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
 
-      - name: Resolve workspace
+      - name: Install dependencies
         run: dart pub get
 
-      - name: Format check
-        run: dart format --set-exit-if-changed .
+      - name: Check formatting
+        run: dart format --output=none --set-exit-if-changed .
 
       - name: Analyze
         run: |
@@ -38,36 +55,94 @@ jobs:
           for pkg in packages/flow_widget_platform_interface packages/flow_widget packages/flow_widget_cli packages/flow_widget_generator packages/flow_widget_annotation; do
             if [ -d "$pkg/test" ]; then
               echo "::group::test $pkg"
-              (cd "$pkg" && dart test)
+              if grep -q 'sdk: flutter' "$pkg/pubspec.yaml"; then
+                (cd "$pkg" && flutter test)
+              else
+                (cd "$pkg" && dart test)
+              fi
               echo "::endgroup::"
             fi
           done
 
-      - name: Example flutter test
-        run: |
-          cd example
-          flutter test
+      - name: Analyze example
+        working-directory: example
+        run: flutter pub get && flutter analyze
 
-  coverage:
+      - name: Example flutter test
+        working-directory: example
+        run: flutter test
+
+  # Runs only on version tag pushes (e.g. v1.0.4), not on main/PR pushes.
+  publish:
+    name: Publish to pub.dev
+    needs: ci
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-latest
-    needs: analyze-and-test
+    permissions:
+      id-token: write # Required for GitHub OIDC with pub.dev
+      contents: read
     steps:
-      - uses: actions/checkout@v4
-      - uses: subosito/flutter-action@v2
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
         with:
           channel: stable
           cache: true
-      - run: dart pub get
-      - name: Platform interface coverage
+
+      - name: Install dependencies
+        run: dart pub get
+
+      - name: Authenticate with pub.dev (upload credentials secret)
+        env:
+          PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
         run: |
-          cd packages/flow_widget_platform_interface
-          flutter test --coverage
-          if [ -f coverage/lcov.info ]; then
-            echo "Coverage artifact ready"
+          if [ -n "${PUB_CREDENTIALS:-}" ]; then
+            mkdir -p "$HOME/.config/dart"
+            printf '%s' "$PUB_CREDENTIALS" > "$HOME/.config/dart/pub-credentials.json"
+            echo "USE_PUB_SECRET=1" >> "$GITHUB_ENV"
+            echo "Authenticated with PUB_CREDENTIALS secret."
+          else
+            echo "USE_PUB_SECRET=0" >> "$GITHUB_ENV"
           fi
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage
-          path: "**/coverage/lcov.info"
-          if-no-files-found: ignore
+
+      - name: Authenticate with pub.dev (GitHub OIDC)
+        if: env.USE_PUB_SECRET == '0'
+        uses: flutter-actions/setup-pubdev-credentials@v1
+
+      - name: Publish packages in dependency order
+        run: |
+          set -euo pipefail
+          publish() {
+            local pkg="$1"
+            echo "::group::Publish $pkg"
+            local version
+            version="$(awk '/^version:/{print $2; exit}' "packages/$pkg/pubspec.yaml")"
+            local status
+            status="$(curl -s -o /dev/null -w '%{http_code}' \
+              "https://pub.dev/api/packages/$pkg/versions/$version")"
+            if [ "$status" = "200" ]; then
+              echo "Skipping $pkg $version (already published)"
+              echo "::endgroup::"
+              return 0
+            fi
+            (cd "packages/$pkg" && flutter pub publish --force)
+            echo "::endgroup::"
+          }
+
+          publish flow_widget_annotation
+          publish flow_widget_platform_interface
+
+          publish flow_widget_android
+          publish flow_widget_ios
+          publish flow_widget_macos
+          publish flow_widget_windows
+          publish flow_widget_linux
+          publish flow_widget_wear
+          publish flow_widget_watchos
+
+          publish flow_widget_generator
+          publish flow_widget_cli
+
+          publish flow_widget
