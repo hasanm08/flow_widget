@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.4
+
+- Depend on `flow_widget_android` ^1.0.2 (Glance `updateAll` refresh + prefs
+  name no longer falls back to `appGroupId`).
+- Depend on `flow_widget_platform_interface` ^1.0.1 (documented Android prefs
+  default and `useGlance` refresh behavior).
+
 ## 1.0.3
 
 - Depend on `flow_widget_android` ^1.0.1 (Gradle 9 / AGP 9 Android build support).

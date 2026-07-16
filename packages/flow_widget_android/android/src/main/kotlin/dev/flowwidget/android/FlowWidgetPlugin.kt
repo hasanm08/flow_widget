@@ -13,7 +13,6 @@ class FlowWidgetPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, EventCh
     companion object {
         private const val METHOD_CHANNEL = "dev.flow_widget/methods"
         private const val EVENT_CHANNEL = "dev.flow_widget/events"
-        private const val DEFAULT_PREFS = "flutter_flow_widget"
         private const val UNSUPPORTED = "unsupported"
     }
 
@@ -168,17 +167,31 @@ class FlowWidgetPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, EventCh
 
     private fun handleInitialize(call: MethodCall, result: MethodChannel.Result) {
         val args = call.arguments as? Map<*, *> ?: emptyMap<Any?, Any?>()
-        val prefsName = (args["androidPrefs"] as? String)
-            ?: (args["appGroupId"] as? String)
-            ?: DEFAULT_PREFS
+        val androidPrefs = args["androidPrefs"] as? String
+        val appGroupId = args["appGroupId"] as? String
+        // Android prefs are independent of iOS/macOS appGroupId. Never fall back
+        // to appGroupId — that silently mismatches native FlowWidgetStorage.create.
+        val prefsName = androidPrefs ?: FlowWidgetStorage.DEFAULT_PREFS_NAME
+        val useGlance = args["useGlance"] as? Boolean ?: true
         val maxCache = (args["imageCacheMaxBytes"] as? Number)?.toLong() ?: 20L * 1024L * 1024L
         debugLogging = args["enableDebugLogging"] == true
 
+        if (androidPrefs.isNullOrEmpty() && !appGroupId.isNullOrEmpty()) {
+            android.util.Log.w(
+                "FlowWidgetPlugin",
+                "androidNamedSharedPreferences was null; using " +
+                    "\"${FlowWidgetStorage.DEFAULT_PREFS_NAME}\". appGroupId " +
+                    "(\"$appGroupId\") is iOS/macOS-only and is not used as the " +
+                    "Android SharedPreferences name. Pass the same name to " +
+                    "FlowWidgetStorage.create in your Glance/RemoteViews code.",
+            )
+        }
+
         storage = FlowWidgetStorage.create(context, prefsName)
         imageStore = FlowWidgetImageStore(context, maxCache)
-        updater = FlowWidgetUpdater(context, requireStorage())
+        updater = FlowWidgetUpdater(context, requireStorage(), useGlance = useGlance)
         initialized = true
-        log("Initialized with prefs=$prefsName")
+        log("Initialized with prefs=$prefsName useGlance=$useGlance")
         result.success(null)
     }
 

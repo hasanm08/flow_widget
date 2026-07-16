@@ -7,4 +7,7 @@
 5. **Check capabilities** — gate Live Activities / pin / tiles with `getCapabilities()`.
 6. **Treat widgets as eventually consistent** — OS refresh budgets vary; design UI for stale states.
 7. **Document App Groups** — iOS/macOS widgets cannot see standard `UserDefaults`.
-8. **Keep extension code thin** — native widgets read shared storage; business logic stays in Flutter / isolates.
+8. **Match Android prefs names** — `androidNamedSharedPreferences` (default
+   `flutter_flow_widget`) must equal the name passed to
+   `FlowWidgetStorage.create` in Kotlin. `appGroupId` is not used on Android.
+9. **Keep extension code thin** — native widgets read shared storage; business logic stays in Flutter / isolates.

@@ -26,7 +26,7 @@ class ${widgetName}Receiver : GlanceAppWidgetReceiver() {
 
 class ${widgetName}Widget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: androidx.glance.appwidget.GlanceId) {
-        val storage = FlowWidgetStorage.create(context, "flow_widget")
+        val storage = FlowWidgetStorage.create(context, FlowWidgetStorage.DEFAULT_PREFS_NAME)
         val title = readString(storage, "${keyPrefix}_title", "$widgetName")
         val body = readString(storage, "${keyPrefix}_body", "Updated from Flutter")
 

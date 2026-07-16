@@ -40,6 +40,22 @@ cd macos && pod install --repo-update
 - Verify `registerConfig` provider / kind matches the native target
 - On iOS, ensure App Group entitlements match `appGroupId`
 - On Android, confirm the receiver is exported and listed in the manifest
+- On Android Glance: ensure `useGlance: true` (default) so refresh calls Glance
+  `updateAll` / `ACTION_APPWIDGET_UPDATE`, not only RemoteViews invalidation
+- On Android: ensure `androidNamedSharedPreferences` matches the name passed to
+  `FlowWidgetStorage.create` in Kotlin (default: `flutter_flow_widget`).
+  `appGroupId` is **not** used as the Android prefs name
+
+## Android SharedPreferences mismatch
+
+Symptoms: Flutter `saveData` / `update` succeed, but the home-screen widget
+still shows placeholders or stale values.
+
+Cause: Flutter and native code opened different prefs files (for example
+Flutter default `flutter_flow_widget` vs Kotlin `"flow_widget"`).
+
+Fix: use the same string on both sides, or omit the Flutter option and use
+`FlowWidgetStorage.DEFAULT_PREFS_NAME` in Kotlin.
 
 ## `FlowWidgetNotInitializedException`
 

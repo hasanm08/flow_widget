@@ -1,6 +1,6 @@
 name: flow_widget_android
 description: Android implementation of the flow_widget federated plugin.
-version: 1.0.1
+version: 1.0.2
 homepage: https://github.com/hasanm08/flow_widget
 repository: https://github.com/hasanm08/flow_widget
 issue_tracker: https://github.com/hasanm08/flow_widget/issues
@@ -16,7 +16,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flow_widget_platform_interface: ^1.0.0
+  flow_widget_platform_interface: ^1.0.1
 
 dev_dependencies:
   flutter_test:

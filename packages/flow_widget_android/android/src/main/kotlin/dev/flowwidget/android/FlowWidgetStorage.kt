@@ -15,12 +15,19 @@ class FlowWidgetStorage(
     private val preferences: SharedPreferences,
 ) {
     companion object {
+        /**
+         * Default SharedPreferences file name. Must match
+         * [FlowWidgetOptions.androidNamedSharedPreferences] when that option is
+         * null, and the name passed to [create] from Glance / RemoteViews code.
+         */
+        const val DEFAULT_PREFS_NAME = "flutter_flow_widget"
+
         private const val DATA_PREFIX = "flow_widget.data."
         private const val CONFIG_PREFIX = "flow_widget.config."
         private const val TIMELINE_PREFIX = "flow_widget.timeline."
         private const val METADATA_PREFIX = "flow_widget.meta."
 
-        fun create(context: Context, prefsName: String): FlowWidgetStorage {
+        fun create(context: Context, prefsName: String = DEFAULT_PREFS_NAME): FlowWidgetStorage {
             val preferences = context.getSharedPreferences(prefsName, Context.MODE_PRIVATE)
             return FlowWidgetStorage(preferences)
         }

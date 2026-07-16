@@ -13,12 +13,28 @@ final class FlowWidgetOptions {
   /// Default options.
   static const FlowWidgetOptions defaults = FlowWidgetOptions();
 
+  /// Default Android [SharedPreferences] file name when
+  /// [androidNamedSharedPreferences] is null.
+  ///
+  /// Native Glance / RemoteViews code must pass this same string to
+  /// `FlowWidgetStorage.create` (or the Kotlin constant
+  /// `FlowWidgetStorage.DEFAULT_PREFS_NAME`).
+  static const String defaultAndroidPrefsName = 'flutter_flow_widget';
+
   /// iOS / macOS App Group identifier for shared container access.
+  ///
+  /// **Android:** not used as a SharedPreferences name. Set
+  /// [androidNamedSharedPreferences] (or rely on [defaultAndroidPrefsName])
+  /// for Android storage.
   final String? appGroupId;
 
-  /// Optional Android SharedPreferences file name.
+  /// Android SharedPreferences file name used by the plugin and by native
+  /// widget code via `FlowWidgetStorage.create(context, prefsName)`.
   ///
-  /// Defaults to `"flutter_flow_widget"` when null.
+  /// When null, Android uses [defaultAndroidPrefsName]
+  /// (`flutter_flow_widget`). This value must match whatever your Glance
+  /// receiver or `AppWidgetProvider` passes to `FlowWidgetStorage.create`;
+  /// a mismatch means Flutter writes data the widget never reads.
   final String? androidNamedSharedPreferences;
 
   /// Enables verbose logging. Always disabled in release / profile when
@@ -33,7 +49,9 @@ final class FlowWidgetOptions {
   final int imageCacheMaxBytes;
 
   /// Prefer Jetpack Glance on Android when the host app provides Glance
-  /// receivers. Falls back to RemoteViews otherwise.
+  /// receivers. When true, native refresh calls Glance `updateAll` /
+  /// per-id `update` (plus `ACTION_APPWIDGET_UPDATE`). When false, refresh
+  /// uses RemoteViews collection invalidation instead.
   final bool useGlance;
 
   /// Wire encoding.

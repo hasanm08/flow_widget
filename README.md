@@ -30,7 +30,9 @@ Future<void> main() async {
 
   await FlowWidget.initialize(
     options: const FlowWidgetOptions(
-      appGroupId: 'group.com.example.app',
+      appGroupId: 'group.com.example.app', // iOS / macOS
+      // androidNamedSharedPreferences defaults to 'flutter_flow_widget';
+      // must match FlowWidgetStorage.create in Kotlin
     ),
   );
 

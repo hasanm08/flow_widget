@@ -6,7 +6,41 @@
 2. Create an `AppWidgetProvider` / Glance receiver (or run the CLI `create` command).
 3. Register the receiver in `AndroidManifest.xml`.
 4. Call `FlowWidget.registerConfig` with `androidProviderFullyQualifiedName`.
-5. Prefer Glance when `FlowWidgetOptions.useGlance` is true and your receiver extends Glance.
+5. Prefer Glance when `FlowWidgetOptions.useGlance` is true (default) and your
+   receiver extends `GlanceAppWidgetReceiver`. With `useGlance: true`,
+   `FlowWidget.update` / `updateAll` recomposes Glance via `updateAll` /
+   per-id `update` and `ACTION_APPWIDGET_UPDATE` — not only
+   `notifyAppWidgetViewDataChanged`.
+
+### SharedPreferences name (easy to mismatch)
+
+Android storage uses a **SharedPreferences file name**, independent of iOS
+`appGroupId`:
+
+| Flutter | Native |
+| --- | --- |
+| `FlowWidgetOptions.androidNamedSharedPreferences` | `FlowWidgetStorage.create(context, prefsName)` |
+| `null` → `flutter_flow_widget` | `FlowWidgetStorage.DEFAULT_PREFS_NAME` |
+
+These **must be identical**. If Flutter writes to `flutter_flow_widget` and
+your Glance widget reads `"flow_widget"`, the widget will never see updates.
+
+```dart
+await FlowWidget.initialize(
+  options: const FlowWidgetOptions(
+    appGroupId: 'group.com.example.app', // iOS / macOS only
+    androidNamedSharedPreferences: 'flutter_flow_widget', // or omit for default
+    useGlance: true,
+  ),
+);
+```
+
+```kotlin
+val storage = FlowWidgetStorage.create(
+    context,
+    FlowWidgetStorage.DEFAULT_PREFS_NAME, // must match Flutter
+)
+```
 
 Minimum SDK: **24**. Target / compile SDK: **35**.
 
@@ -33,7 +67,7 @@ Install the plugin normally. Shared storage and `update*` succeed; visual deskto
 
 ## Wear OS
 
-Add `flow_widget_wear` to your **Wear module**, extend `FlowWidgetTileService`, and declare the tile service in the Wear manifest.
+Add `flow_widget_wear` to your app's **Wear module**, extend `FlowWidgetTileService`, and declare the tile service in the Wear manifest.
 
 ## watchOS
 

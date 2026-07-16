@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.0.2
+
+- Glance refresh: when `useGlance` is true, call Glance `updateAll` / per-id
+  `update` and send `ACTION_APPWIDGET_UPDATE` instead of relying only on
+  `notifyAppWidgetViewDataChanged` (which does not recompose Glance).
+- Stop using `appGroupId` as the Android SharedPreferences name fallback;
+  default is `FlowWidgetStorage.DEFAULT_PREFS_NAME` (`flutter_flow_widget`).
+- Log a warning when `appGroupId` is set but `androidNamedSharedPreferences`
+  is null, so prefs mismatches are visible.
+
 ## 1.0.1
 
 - Migrate Android Gradle build to AGP 9 / Gradle 9 compatibility.
