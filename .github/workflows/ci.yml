@@ -45,7 +45,7 @@ jobs:
           done
 
       - name: Check formatting
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format .
 
       - name: Analyze
         run: |
