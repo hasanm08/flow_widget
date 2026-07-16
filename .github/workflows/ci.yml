@@ -117,6 +117,16 @@ jobs:
           publish() {
             local pkg="$1"
             echo "::group::Publish $pkg"
+            local version
+            version="$(awk '/^version:/{print $2; exit}' "packages/$pkg/pubspec.yaml")"
+            local status
+            status="$(curl -s -o /dev/null -w '%{http_code}' \
+              "https://pub.dev/api/packages/$pkg/versions/$version")"
+            if [ "$status" = "200" ]; then
+              echo "Already on pub.dev: $pkg $version — continuing"
+              echo "::endgroup::"
+              return 0
+            fi
             (cd "packages/$pkg" && flutter pub publish --force)
             echo "::endgroup::"
           }
