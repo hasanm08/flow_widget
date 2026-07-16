@@ -33,8 +33,17 @@ jobs:
         run: |
           set -euo pipefail
           publish() {
-            echo "::group::Publish $1"
-            (cd "packages/$1" && dart pub publish --force)
+            local pkg="$1"
+            echo "::group::Publish $pkg"
+            local version
+            version="$(grep '^version:' "packages/$pkg/pubspec.yaml" | awk '{print $2}')"
+            # Skip versions that are already on pub.dev.
+            if curl -fsSIL "https://pub.dev/api/packages/$pkg/versions/$version" >/dev/null 2>&1; then
+              echo "Skipping $pkg $version (already published)"
+              echo "::endgroup::"
+              return 0
+            fi
+            (cd "packages/$pkg" && dart pub publish --force)
             echo "::endgroup::"
           }
 
