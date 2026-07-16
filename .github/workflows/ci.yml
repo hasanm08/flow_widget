@@ -35,7 +35,14 @@ jobs:
           cache: true
 
       - name: Install dependencies
-        run: dart pub get
+        run: |
+          for pkg in packages/* example; do
+            if [ -f "$pkg/pubspec.yaml" ]; then
+              echo "::group::pub get $pkg"
+              (cd "$pkg" && flutter pub get)
+              echo "::endgroup::"
+            fi
+          done
 
       - name: Check formatting
         run: dart format --output=none --set-exit-if-changed .
@@ -63,10 +70,6 @@ jobs:
               echo "::endgroup::"
             fi
           done
-
-      - name: Analyze example
-        working-directory: example
-        run: flutter pub get && flutter analyze
 
       - name: Example flutter test
         working-directory: example
