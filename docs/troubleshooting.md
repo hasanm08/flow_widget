@@ -57,6 +57,17 @@ Flutter default `flutter_flow_widget` vs Kotlin `"flow_widget"`).
 Fix: use the same string on both sides, or omit the Flutter option and use
 `FlowWidgetStorage.DEFAULT_PREFS_NAME` in Kotlin.
 
+## Android Glance opens `/CALLBACK` (“Page not found”)
+
+Symptoms: tapping a Glance widget launches the app on a `/CALLBACK?…` route.
+
+Cause: Glance overwrote `Intent.data` with its trampoline URI because the
+start-activity Intent had no `data`. Flutter deep linking navigated there.
+
+Fix: use `FlowWidgetLaunch.activityIntent` and
+`FlowWidgetFlutterActivity` (see [Platform setup](platform_setup.md) and
+[FAQ](faq.md)).
+
 ## `FlowWidgetNotInitializedException`
 
 Call `initialize` before any other API.

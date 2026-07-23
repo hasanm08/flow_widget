@@ -14,10 +14,18 @@ String androidGlanceProvider({
 package $packageName
 
 import android.content.Context
+import androidx.glance.GlanceModifier
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Column
+import androidx.glance.layout.fillMaxSize
 import androidx.glance.text.Text
+import $applicationId.MainActivity
+import dev.flowwidget.android.FlowWidgetLaunch
 import dev.flowwidget.android.FlowWidgetStorage
 
 class ${widgetName}Receiver : GlanceAppWidgetReceiver() {
@@ -30,8 +38,26 @@ class ${widgetName}Widget : GlanceAppWidget() {
         val title = readString(storage, "${keyPrefix}_title", "$widgetName")
         val body = readString(storage, "${keyPrefix}_body", "Updated from Flutter")
 
+        // Use FlowWidgetLaunch so Glance does not inject /CALLBACK into Intent.data
+        // (Flutter deep linking would otherwise navigate to that path).
+        val openApp = actionStartActivity(
+            FlowWidgetLaunch.activityIntent(
+                context = context,
+                activityClass = MainActivity::class.java,
+                route = "/dashboard",
+                action = "open",
+                widgetName = "$widgetName",
+            ),
+        )
+
         provideContent {
-            Text(text = "\$title\\n\$body")
+            Column(
+                modifier = GlanceModifier.fillMaxSize().clickable(openApp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(text = "\$title\\n\$body")
+            }
         }
     }
 
@@ -40,6 +66,18 @@ class ${widgetName}Widget : GlanceAppWidget() {
         return wire["v"] as? String ?: default
     }
 }
+''';
+}
+
+String androidMainActivitySnippet({required String applicationId}) {
+  return '''
+package $applicationId
+
+import dev.flowwidget.android.FlowWidgetFlutterActivity
+
+// Prefer FlowWidgetFlutterActivity over FlutterActivity so Glance trampoline
+// /CALLBACK URIs are rewritten before Flutter deep linking reads Intent.data.
+class MainActivity : FlowWidgetFlutterActivity()
 ''';
 }
 

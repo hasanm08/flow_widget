@@ -100,6 +100,9 @@ class TemplateWriter {
       ),
     );
     await File(
+      p.join(androidDir.path, 'MainActivity.kt.snippet'),
+    ).writeAsString(androidMainActivitySnippet(applicationId: applicationId));
+    await File(
       p.join(resDir.path, 'xml', '${snake}_widget_info.xml'),
     ).writeAsString(
       androidWidgetInfoXml(widgetName: name, providerClass: providerClass),

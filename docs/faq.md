@@ -6,6 +6,14 @@ No. OS widgets are native (RemoteViews / Glance / SwiftUI). Flutter writes data 
 **Can I use it with Flutter flavors?**  
 Yes. Point `androidProviderFullyQualifiedName` / App Group ids per flavor.
 
+**Why does tapping my Android Glance widget open `/CALLBACK` (“Page not found”)?**  
+That path is **not** from `flow_widget`. AndroidX Glance injects a unique
+`/CALLBACK?…` URI onto `actionStartActivity` Intents that have no `data`.
+Flutter deep linking then treats it as a route. Use
+`FlowWidgetLaunch.activityIntent(...)` (sets a real URI) and extend
+`FlowWidgetFlutterActivity` so leftover CALLBACK URIs are rewritten. See
+[Platform setup](platform_setup.md#glance-clicks-and-flutter-deep-linking-callback).
+
 **Is Windows Widgets supported?**  
 Only through documented storage/update hooks unless Microsoft exposes a stable public API your app can legally use. See `flow_widget_windows` README.
 

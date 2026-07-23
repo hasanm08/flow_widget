@@ -1,5 +1,5 @@
 group = "dev.flowwidget.android"
-version = "1.0.2"
+version = "1.0.3"
 
 plugins {
     id("com.android.library")

@@ -1,5 +1,5 @@
 package com.example.flow_widget_example
 
-import io.flutter.embedding.android.FlutterActivity
+import dev.flowwidget.android.FlowWidgetFlutterActivity
 
-class MainActivity : FlutterActivity()
+class MainActivity : FlowWidgetFlutterActivity()

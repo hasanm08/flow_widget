@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.5
+
+- Depend on `flow_widget_android` ^1.0.3 (`FlowWidgetLaunch` /
+  `FlowWidgetFlutterActivity` to avoid Glance `/CALLBACK` deep links).
+
 ## 1.0.4
 
 - Depend on `flow_widget_android` ^1.0.2 (Glance `updateAll` refresh + prefs

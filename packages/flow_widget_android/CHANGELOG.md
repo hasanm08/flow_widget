@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.0.3
+
+- Add `FlowWidgetLaunch.activityIntent` so Glance `actionStartActivity`
+  Intents carry a unique URI and Glance does not inject `/CALLBACK`.
+- Add `FlowWidgetFlutterActivity` to sanitize leftover CALLBACK URIs, prefer
+  the `route` extra for `getInitialRoute()`, and emit `click` events when
+  `flow_widget_action` is present.
+- Expose `FlowWidgetPlugin.emitClick` for EventChannel / Dart `onClicked`.
+
 ## 1.0.2
 
 - Glance refresh: when `useGlance` is true, call Glance `updateAll` / per-id

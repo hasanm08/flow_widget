@@ -10,4 +10,8 @@
 8. **Match Android prefs names** — `androidNamedSharedPreferences` (default
    `flutter_flow_widget`) must equal the name passed to
    `FlowWidgetStorage.create` in Kotlin. `appGroupId` is not used on Android.
-9. **Keep extension code thin** — native widgets read shared storage; business logic stays in Flutter / isolates.
+9. **Glance clicks need a real Intent URI** — never rely on bare
+   `actionStartActivity<MainActivity>(...)` without `Intent.data`; Glance
+   injects `/CALLBACK` and Flutter deep linking will route to it. Use
+   `FlowWidgetLaunch` + `FlowWidgetFlutterActivity`.
+10. **Keep extension code thin** — native widgets read shared storage; business logic stays in Flutter / isolates.

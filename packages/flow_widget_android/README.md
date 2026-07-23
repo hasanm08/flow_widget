@@ -11,6 +11,8 @@ Android federated implementation for [flow_widget](https://github.com/hasanm08/f
   - With `useGlance: false`, refresh invalidates RemoteViews collections
 - Image persistence under `filesDir/flow_widget_images/`
 - Pin-widget requests via `AppWidgetManager.requestPinAppWidget` (API 26+)
+- `FlowWidgetLaunch` + `FlowWidgetFlutterActivity` helpers so Glance
+  `actionStartActivity` does not inject `/CALLBACK` into Flutter deep links
 - Live Activities are not supported on Android (methods return `unsupported`)
 
 ## SharedPreferences name
@@ -21,6 +23,30 @@ Default file name: `flutter_flow_widget`
 Pass the same value from Flutter via
 `FlowWidgetOptions.androidNamedSharedPreferences`. Do **not** rely on
 `appGroupId` for Android — that option is iOS/macOS only.
+
+## Glance click launches
+
+Glance may overwrite `Intent.data` with `/CALLBACK?…` when the Intent has no
+URI. Flutter then deep-links to that path. Prefer:
+
+```kotlin
+actionStartActivity(
+    FlowWidgetLaunch.activityIntent(
+        context,
+        MainActivity::class.java,
+        route = "/dashboard",
+        action = "open",
+        widgetName = "DemoWidget",
+    ),
+)
+```
+
+```kotlin
+class MainActivity : FlowWidgetFlutterActivity()
+```
+
+When `action` is set, `FlowWidgetFlutterActivity` also emits a `click` event
+for Dart `FlowWidget.onClicked`.
 
 ## Usage
 

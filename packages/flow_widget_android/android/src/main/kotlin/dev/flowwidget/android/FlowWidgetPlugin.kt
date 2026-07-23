@@ -14,6 +14,36 @@ class FlowWidgetPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, EventCh
         private const val METHOD_CHANNEL = "dev.flow_widget/methods"
         private const val EVENT_CHANNEL = "dev.flow_widget/events"
         private const val UNSUPPORTED = "unsupported"
+
+        @Volatile
+        private var instance: FlowWidgetPlugin? = null
+
+        /**
+         * Emits a wire `click` event for Dart [FlowWidget.onClicked].
+         *
+         * Safe to call when the Flutter engine is not attached (no-op).
+         */
+        @JvmStatic
+        @JvmOverloads
+        fun emitClick(
+            widgetName: String,
+            widgetId: Int? = null,
+            action: String? = null,
+            uri: String? = null,
+        ) {
+            val plugin = instance ?: return
+            val event = linkedMapOf<String, Any?>(
+                "type" to "click",
+                "widgetId" to buildMap {
+                    put("name", widgetName)
+                    if (widgetId != null) put("id", widgetId)
+                },
+                "timestamp" to System.currentTimeMillis(),
+            )
+            if (action != null) event["action"] = action
+            if (uri != null) event["uri"] = uri
+            plugin.emitEvent(event)
+        }
     }
 
     private lateinit var context: Context
@@ -33,9 +63,13 @@ class FlowWidgetPlugin : FlutterPlugin, MethodChannel.MethodCallHandler, EventCh
         eventChannel = EventChannel(binding.binaryMessenger, EVENT_CHANNEL)
         methodChannel.setMethodCallHandler(this)
         eventChannel.setStreamHandler(this)
+        instance = this
     }
 
     override fun onDetachedFromEngine(binding: FlutterPlugin.FlutterPluginBinding) {
+        if (instance === this) {
+            instance = null
+        }
         methodChannel.setMethodCallHandler(null)
         eventChannel.setStreamHandler(null)
         eventSink = null
